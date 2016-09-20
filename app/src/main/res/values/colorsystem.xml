@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ColorSystem_array">
+        <item>CMY</item>
+        <item>XYZ</item>
+        <item>HSL</item>
+        <item>HSV</item>
+        <item>HSB</item>
+        <item>HSI</item>
+        <item>YCbCr</item>
+        <item>YIQ</item>
+        <item>YUV</item>
+    </string-array>
+</resources>

@@ -16,6 +16,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.sm.ufersa.systems.Color;
+import com.sm.ufersa.systems.SystemBase;
+import com.sm.ufersa.systems.SystemFactory;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Spinner
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.ColorSystem_array, android.R.layout.simple_spinner_item);
@@ -59,6 +63,12 @@ public class MainActivity extends AppCompatActivity
         btnConvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Instanciar o Sistema de Cores com base no que foi escolhido pelo usuário
+                String systemColorName = spinner.getSelectedItem().toString();
+                SystemBase systemColor = SystemFactory.getInstance(systemColorName);
+                systemColor.convert(new Color());
+
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

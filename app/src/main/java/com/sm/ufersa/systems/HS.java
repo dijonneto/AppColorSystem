@@ -1,12 +1,35 @@
-public class hs {
+package com.sm.ufersa.systems;
+
+public class HS implements SystemBase{
+
+	private String system;
+
+	public HS(String s){
+		this.system = s;
+	}
+
+	@Override
+	public Color convert(Color rgb){
+		if (system.contains("B")){
+			return setHsb(rgb);
+		} else if (system.contains("I")){
+			return setHsi(rgb);
+		} else if (system.contains("L")){
+			return setHsl(rgb);
+		} else if (system.contains("V")){
+			return setHsv(rgb);
+		} else {
+			return null;
+		}
+	}
 	
 	//Processo comum para todos os padrões HS
-	public static float[] hs(padrao rgb) {
+	public static float[] commonProcess(Color rgb) {
 		//R', G' e B'
 		float r1, g1, b1;
-		r1 = rgb.getComponente1()/255.0f;
-		g1 = rgb.getComponente2()/255.0f;
-		b1 = rgb.getComponente3()/255.0f;
+		r1 = rgb.getComponent1()/255.0f;
+		g1 = rgb.getComponent2()/255.0f;
+		b1 = rgb.getComponent3()/255.0f;
 
 		//C máximo e mínimo
 		float Cmax = 0;
@@ -41,10 +64,10 @@ public class hs {
 	}
 	
 	//Para o padrão HSL
-	public static padrao setHsl (padrao rgb) {
+	public static Color setHsl (Color rgb) {
 		//Auxiliares
 		float dados[], Cmax, Cmin, A, h, s, l;
-		dados = hs(rgb);
+		dados = commonProcess(rgb);
 		Cmax = dados[0];
 		Cmin = dados[1];
 		A = dados[2];
@@ -65,19 +88,19 @@ public class hs {
 			s = (A/(1-l1));
 		}
 		//Retorno da função de conversão
-		padrao hsl = new padrao();
-		hsl.setComponente1((int)h);
-		hsl.setComponente2(s*100);
-		hsl.setComponente3(l*100);
+		Color hsl = new Color();
+		hsl.setComponent1((int)h);
+		hsl.setComponent2(s*100);
+		hsl.setComponent3(l*100);
 		
 		return hsl;
 	}
 	
 	//Para o padrão HSV
-	public static padrao setHsv (padrao rgb) {
+	public static Color setHsv (Color rgb) {
 		//Auxiliares
 		float dados[], Cmax, A, h, s, v;
-		dados = hs(rgb);
+		dados = commonProcess(rgb);
 		Cmax = dados[0];
 		A = dados[2];
 		h = dados[3];
@@ -94,23 +117,23 @@ public class hs {
 		}
 		
 		//Retorno da função de conversão
-		padrao hsv = new padrao();
-		hsv.setComponente1((int)h);
-		hsv.setComponente2(s*100);
-		hsv.setComponente3(v*100);
+		Color hsv = new Color();
+		hsv.setComponent1((int)h);
+		hsv.setComponent2(s*100);
+		hsv.setComponent3(v*100);
 		return hsv;
 	}
 	
 	//Para o padrão HSI
-	public static padrao setHsi (padrao rgb) {
+	public static Color setHsi (Color rgb) {
 		//Auxiliares
 		float dados[], Cmin, h, s, i;
-		dados = hs(rgb);
+		dados = commonProcess(rgb);
 		Cmin = dados[1];
 		h = dados[3];
 		
 		//Value
-		i = (rgb.getComponente1() + rgb.getComponente2() + rgb.getComponente3()) / 3;
+		i = (rgb.getComponent1() + rgb.getComponent2() + rgb.getComponent3()) / 3;
 
 		//Intensity
 		if (i > 0) {
@@ -121,18 +144,18 @@ public class hs {
 		}
 		
 		//Retorno da função de conversão
-		padrao hsv = new padrao();
-		hsv.setComponente1((int)h);
-		hsv.setComponente2(s*100);
-		hsv.setComponente3(i);
+		Color hsv = new Color();
+		hsv.setComponent1((int)h);
+		hsv.setComponent2(s*100);
+		hsv.setComponent3(i);
 		return hsv;
 	}
 	
 	//Para o padrão HSB
-	public static padrao setHsb (padrao rgb) {
+	public static Color setHsb (Color rgb) {
 		//Auxiliares
 		float dados[], Cmax, Cmin, A, h, s, b;
-		dados = hs(rgb);
+		dados = commonProcess(rgb);
 		Cmax = dados[0];
 		Cmin = dados[1];
 		A = dados[2];
@@ -150,10 +173,10 @@ public class hs {
 		}
 		
 		//Retorno da função de conversão
-		padrao hsv = new padrao();
-		hsv.setComponente1((int)h);
-		hsv.setComponente2(s*100);
-		hsv.setComponente3(b*100);
+		Color hsv = new Color();
+		hsv.setComponent1((int)h);
+		hsv.setComponent2(s*100);
+		hsv.setComponent3(b*100);
 		return hsv;
 	}
 }

@@ -1,5 +1,7 @@
 package com.sm.ufersa.appcolorsystem;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,7 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sm.ufersa.systems.Color;
 import com.sm.ufersa.systems.SystemBase;
@@ -58,21 +63,109 @@ public class MainActivity extends AppCompatActivity
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
+        // --------
+        // SeekBars
+        // --------
+
+        SeekBar seekBarR = (SeekBar) findViewById(R.id.seekBarR);
+        final TextView[] textViewR = {(TextView) findViewById(R.id.textViewR)};
+        final int[] valueR = {0};
+        seekBarR.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
+                //currentValue = progress;
+                valueR[0] = progress;
+                textViewR[0].setText(Integer.toString(progress));
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+        });
+
+        SeekBar seekBarG = (SeekBar) findViewById(R.id.seekBarG);
+        final TextView[] textViewG = {(TextView) findViewById(R.id.textViewG)};
+        final int[] valueG = {0};
+        seekBarG.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
+                //currentValue = progress;
+                valueG[0] = progress;
+                textViewG[0].setText(Integer.toString(progress));
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+        });
+
+        SeekBar seekBarB = (SeekBar) findViewById(R.id.seekBarB);
+        final TextView[] textViewB = {(TextView) findViewById(R.id.textViewB)};
+        final int[] valueB = {0};
+        seekBarB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
+                valueB[0] = progress;
+                textViewB[0].setText(Integer.toString(progress));
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+        });
+
+        // ------
         // Button
+        // ------
+
         Button btnConvert = (Button) findViewById(R.id.buttonConvert);
         btnConvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // Instanciar o Sistema de Cores com base no que foi escolhido pelo usuário
-                String systemColorName = spinner.getSelectedItem().toString();
-                SystemBase systemColor = SystemFactory.getInstance(systemColorName);
-                systemColor.convert(new Color());
+                try {
+                    // Instanciar o Sistema de Cores com base no que foi escolhido pelo usuário
+                    String systemColorName = spinner.getSelectedItem().toString();
+                    SystemBase systemColor = SystemFactory.getInstance(systemColorName);
+                    Color c = systemColor.convert(new Color(valueR[0], valueG[0], valueB[0]));
 
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setMessage(systemColor.printResult(c))
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    //do things
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } catch (NullPointerException ex){
+                    //Toast.makeText(view.getContext(), "Escolha um sistema de cores válido", Toast.LENGTH_LONG);
+                    Snackbar.make(view, "Escolha um sistema de cores válido!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+
             }
         });
+
     }
 
     @Override

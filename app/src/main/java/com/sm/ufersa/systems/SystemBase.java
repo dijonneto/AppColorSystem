@@ -6,4 +6,5 @@ package com.sm.ufersa.systems;
 
 public interface SystemBase {
     Color convert(Color rgb);
+    String printResult(Color colorResult);
 }

@@ -22,6 +22,27 @@ public class HS implements SystemBase{
 			return null;
 		}
 	}
+
+	@Override
+	public String printResult(Color colorResult){
+		String result = "H: "+ (int) colorResult.getComponent1() +
+						"\nS: "+ (int) colorResult.getComponent2() + "\n";
+		if (system.contains("B")){
+			result += "B: ";
+		} else if (system.contains("I")){
+			result += "I: ";
+		} else if (system.contains("L")){
+			result += "L: ";
+		} else if (system.contains("V")){
+			result += "V: ";
+		} else {
+			result = null;
+		}
+		if(result != null)
+			result += (int) colorResult.getComponent3();
+
+		return result;
+	}
 	
 	//Processo comum para todos os padrões HS
 	public static float[] commonProcess(Color rgb) {

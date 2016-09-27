@@ -1,4 +1,4 @@
-package multimidia;
+package com.sm.ufersa.systems;
 
 public class XYZ implements SystemBase{
 
@@ -25,13 +25,20 @@ public class XYZ implements SystemBase{
 		auxG *= 100;
 		auxB *= 100;
 		
-		System.out.println();
+		//System.out.println();
 
 		float x = (float) (auxR * 0.4124 + auxG * 0.3576 + auxB * 0.1805);
 		float y = (float) (auxR * 0.2126 + auxG * 0.7152 + auxB * 0.0722);
 		float z = (float) (auxR * 0.0193 + auxG * 0.1192 + auxB * 0.9505);
 		
 		return new Color(x, y, z);
+	}
+
+	@Override
+	public String printResult(Color colorResult) {
+		return "X: "+ (int) colorResult.getComponent1() +
+				"\nY: "+ (int) colorResult.getComponent2() +
+				"\nZ: " + (int) colorResult.getComponent3();
 	}
 
 	

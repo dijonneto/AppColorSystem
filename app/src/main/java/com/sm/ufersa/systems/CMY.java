@@ -4,11 +4,19 @@ public class CMY implements SystemBase{
 
     @Override
     public Color convert(Color rgb){
-        float c = 1 - rgb.getComponent1();
-        float m = 1 - rgb.getComponent2();
-        float y = 1 - rgb.getComponent3();
+        float r = rgb.getComponent1()/255;
+        float g = rgb.getComponent2()/255;
+        float b = rgb.getComponent3()/255;
 
-        return new Color(c, m, y);
+        float k = 1 - Math.max(r, Math.max(g, b));
+
+        float c, m, y;
+
+        c = (1 - r - k) / (1 - k);
+        m = (1 - g + k) / (1 - k);
+        y = (1 - b + k) / (1 - k);
+
+        return new Color(c*255, m*255, y*255);
     }
 
     @Override

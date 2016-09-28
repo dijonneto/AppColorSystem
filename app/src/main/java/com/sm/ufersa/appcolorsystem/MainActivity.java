@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.InputFilter;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,17 +17,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sm.ufersa.systems.Color;
 import com.sm.ufersa.systems.SystemBase;
 import com.sm.ufersa.systems.SystemFactory;
+import com.sm.ufersa.utils.InputFilterMinMax;
+import com.sm.ufersa.utils.Watcher;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    static ImageView backgroundImg;
+    final static int[] valueR = {0};
+    final static int[] valueG = {0};
+    final static int[] valueB = {0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +62,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Background ImageView
+        backgroundImg = (ImageView) findViewById(R.id.imageViewColorResult);
+        updateBackgroundImageView();
+
         // Spinner
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -68,8 +81,9 @@ public class MainActivity extends AppCompatActivity
         // --------
 
         SeekBar seekBarR = (SeekBar) findViewById(R.id.seekBarR);
-        final TextView[] textViewR = {(TextView) findViewById(R.id.textViewR)};
-        final int[] valueR = {0};
+        final EditText[] textViewR = {(EditText) findViewById(R.id.editTextR)};
+        textViewR[0].setFilters(new InputFilter[]{ new InputFilterMinMax("0", "255")});
+        textViewR[0].setOnFocusChangeListener(new Watcher(textViewR[0],seekBarR));
         seekBarR.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
@@ -77,6 +91,7 @@ public class MainActivity extends AppCompatActivity
                 //currentValue = progress;
                 valueR[0] = progress;
                 textViewR[0].setText(Integer.toString(progress));
+                updateBackgroundImageView();
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -90,8 +105,9 @@ public class MainActivity extends AppCompatActivity
         });
 
         SeekBar seekBarG = (SeekBar) findViewById(R.id.seekBarG);
-        final TextView[] textViewG = {(TextView) findViewById(R.id.textViewG)};
-        final int[] valueG = {0};
+        final EditText[] textViewG = {(EditText) findViewById(R.id.editTextG)};
+        textViewG[0].setFilters(new InputFilter[]{ new InputFilterMinMax("0", "255")});
+        textViewG[0].setOnFocusChangeListener(new Watcher(textViewG[0],seekBarG));
         seekBarG.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
@@ -99,6 +115,7 @@ public class MainActivity extends AppCompatActivity
                 //currentValue = progress;
                 valueG[0] = progress;
                 textViewG[0].setText(Integer.toString(progress));
+                updateBackgroundImageView();
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -112,14 +129,16 @@ public class MainActivity extends AppCompatActivity
         });
 
         SeekBar seekBarB = (SeekBar) findViewById(R.id.seekBarB);
-        final TextView[] textViewB = {(TextView) findViewById(R.id.textViewB)};
-        final int[] valueB = {0};
+        final EditText[] textViewB = {(EditText) findViewById(R.id.editTextB)};
+        textViewB[0].setFilters(new InputFilter[]{ new InputFilterMinMax("0", "255")});
+        textViewB[0].setOnFocusChangeListener(new Watcher(textViewB[0],seekBarB));
         seekBarB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
         {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
             {
                 valueB[0] = progress;
                 textViewB[0].setText(Integer.toString(progress));
+                updateBackgroundImageView();
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -140,6 +159,11 @@ public class MainActivity extends AppCompatActivity
         btnConvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // TODO Preview da cor
+                // TODO EditText
+                // TODO Cor nas componentes.
+                // TODO Exibir todas as conversões.
 
                 try {
                     // Instanciar o Sistema de Cores com base no que foi escolhido pelo usuário
@@ -224,4 +248,10 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public static void updateBackgroundImageView(){
+        backgroundImg.setBackgroundColor(android.graphics.Color.rgb(valueR[0], valueG[0], valueB[0]));
+        //backgroundImg.invalidate();
+    }
+
 }

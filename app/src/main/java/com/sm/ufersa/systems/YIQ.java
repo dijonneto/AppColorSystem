@@ -15,7 +15,7 @@ public class YIQ implements SystemBase {
     @Override
     public String printResult(Color colorResult) {
         return "Y: "+ (int) colorResult.getComponent1() +
-                "\nCb: "+ (int) colorResult.getComponent2() +
-                "\nCr: " + (int) colorResult.getComponent3();
+                "\nI: "+ (int) colorResult.getComponent2() +
+                "\nQ: " + (int) colorResult.getComponent3();
     }
 }

@@ -19,7 +19,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,6 +31,9 @@ import com.sm.ufersa.systems.SystemFactory;
 import com.sm.ufersa.utils.InputFilterMinMax;
 import com.sm.ufersa.utils.Watcher;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -36,6 +41,13 @@ public class MainActivity extends AppCompatActivity
     final static int[] valueR = {0};
     final static int[] valueG = {0};
     final static int[] valueB = {0};
+
+    private ListView lista;
+    private ArrayAdapter<String> arrayAdapter;
+
+    private String[] constSC = new String[]{
+            "CMY","XYZ","HSL","HSV","HSB","HSI","YCbCr","YIQ","YUV"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,19 +74,22 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Init empty list of conversion result
+        initList();
+
         // Background ImageView
         backgroundImg = (ImageView) findViewById(R.id.imageViewColorResult);
         updateBackgroundImageView();
 
         // Spinner
-        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        //final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.ColorSystem_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+        //spinner.setAdapter(adapter);
 
         // --------
         // SeekBars
@@ -159,34 +174,8 @@ public class MainActivity extends AppCompatActivity
         btnConvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // TODO Preview da cor
-                // TODO EditText
-                // TODO Cor nas componentes.
                 // TODO Exibir todas as conversões.
-
-                try {
-                    // Instanciar o Sistema de Cores com base no que foi escolhido pelo usuário
-                    String systemColorName = spinner.getSelectedItem().toString();
-                    SystemBase systemColor = SystemFactory.getInstance(systemColorName);
-                    Color c = systemColor.convert(new Color(valueR[0], valueG[0], valueB[0]));
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setMessage(systemColor.printResult(c))
-                            .setCancelable(false)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    //do things
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                } catch (NullPointerException ex){
-                    //Toast.makeText(view.getContext(), "Escolha um sistema de cores válido", Toast.LENGTH_LONG);
-                    Snackbar.make(view, "Escolha um sistema de cores válido!", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-
+                fillList();
             }
         });
 
@@ -252,6 +241,45 @@ public class MainActivity extends AppCompatActivity
     public static void updateBackgroundImageView(){
         backgroundImg.setBackgroundColor(android.graphics.Color.rgb(valueR[0], valueG[0], valueB[0]));
         //backgroundImg.invalidate();
+    }
+
+    private void initList(){
+        // This is the array adapter, it takes the context of the activity as a
+        // first parameter, the type of list view as a second parameter and your
+        // array as a third parameter.
+        arrayAdapter = new ArrayAdapter<>(
+                getBaseContext(),
+                R.layout.content_list_result_systemcolor,
+                R.id.resultConversion );
+
+        lista = (ListView)findViewById(R.id.listView);
+        lista.setAdapter(arrayAdapter);
+    }
+
+    private void fillList(){
+        arrayAdapter.clear();
+
+        for (String sc : constSC) {
+
+            String systemColorName = sc; //spinner.getSelectedItem().toString();
+                    SystemBase systemColor = SystemFactory.getInstance(systemColorName);
+            Color c = systemColor.convert(new Color(valueR[0], valueG[0], valueB[0]));
+
+            arrayAdapter.add(systemColor.printResult(c));
+
+            //AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            //builder.setMessage(systemColor.printResult(c))
+            //        .setCancelable(false)
+            //       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            //            public void onClick(DialogInterface dialog, int id) {
+            //                //do things
+            //            }
+            //        });
+            //AlertDialog alert = builder.create();
+            //alert.show();
+        }
+
+        arrayAdapter.notifyDataSetChanged();
     }
 
 }
